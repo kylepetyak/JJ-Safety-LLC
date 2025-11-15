@@ -42,7 +42,10 @@ export default function Navbar() {
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-navy-950">
+            <div className={cn(
+              "text-2xl font-bold transition-colors",
+              isScrolled ? "text-navy-950" : "text-white"
+            )}>
               JJ Safety <span className="text-accent-400">LLC</span>
             </div>
           </Link>
@@ -53,7 +56,12 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-navy-950 font-medium transition-colors"
+                className={cn(
+                  "font-medium transition-colors",
+                  isScrolled
+                    ? "text-gray-700 hover:text-navy-950"
+                    : "text-white hover:text-accent-400"
+                )}
               >
                 {item.name}
               </Link>
@@ -62,14 +70,23 @@ export default function Navbar() {
 
           {/* CTA Button */}
           <div className="hidden lg:block">
-            <Button href="/free-assessment" variant="primary" size="md">
+            <Button
+              href="/free-assessment"
+              variant={isScrolled ? "primary" : "secondary"}
+              size="md"
+            >
               Free Assessment
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-gray-700 hover:text-navy-950"
+            className={cn(
+              "lg:hidden p-2 transition-colors",
+              isScrolled
+                ? "text-gray-700 hover:text-navy-950"
+                : "text-white hover:text-accent-400"
+            )}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -78,20 +95,33 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200">
+          <div className={cn(
+            "lg:hidden py-4 border-t",
+            isScrolled ? "border-gray-200 bg-white" : "border-white/20 bg-navy-900/95 backdrop-blur-md"
+          )}>
             <div className="flex flex-col space-y-4">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-navy-950 font-medium transition-colors py-2"
+                  className={cn(
+                    "font-medium transition-colors py-2",
+                    isScrolled
+                      ? "text-gray-700 hover:text-navy-950"
+                      : "text-white hover:text-accent-400"
+                  )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
               <div className="pt-4">
-                <Button href="/free-assessment" variant="primary" size="md" className="w-full">
+                <Button
+                  href="/free-assessment"
+                  variant={isScrolled ? "primary" : "secondary"}
+                  size="md"
+                  className="w-full"
+                >
                   Free Assessment
                 </Button>
               </div>
