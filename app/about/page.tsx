@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 }
 
 const stats = [
-  { number: 500, label: 'Clients', suffix: '+' },
+  { number: 5000, label: 'Clients', suffix: '+' },
   { number: 25, label: 'Employees', suffix: '+' },
   { number: 10, label: 'Years In Business', suffix: '+' },
   { number: 1000, label: 'Safety Programs', suffix: '+' },

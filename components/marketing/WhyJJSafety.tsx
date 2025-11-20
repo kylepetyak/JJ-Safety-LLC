@@ -11,7 +11,7 @@ const advantages = [
   {
     icon: Users,
     title: 'Proven Track Record',
-    description: 'Over 500 companies trust us with their compliance. We\'ve helped businesses go from C ratings to A+ in as little as 60 days.',
+    description: 'Over 5000 companies trust us with their compliance. We\'ve helped businesses go from C ratings to A+ in as little as 60 days.',
   },
   {
     icon: Clock,

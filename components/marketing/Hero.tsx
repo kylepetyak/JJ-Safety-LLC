@@ -4,7 +4,7 @@ import { Shield, CheckCircle2 } from 'lucide-react'
 
 const trustIndicators = [
   { label: 'Years in Business', value: '10+' },
-  { label: 'Clients Served', value: '500+' },
+  { label: 'Clients Served', value: '5000+' },
   { label: 'Platforms Managed', value: '6+' },
 ]
 
