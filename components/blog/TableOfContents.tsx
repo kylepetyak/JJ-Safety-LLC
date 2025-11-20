@@ -85,10 +85,17 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
           }`}
           onClick={(e) => {
             e.preventDefault()
-            document.getElementById(item.id)?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-            })
+            const element = document.getElementById(item.id)
+            if (element) {
+              const offset = 100 // Account for fixed navbar
+              const elementPosition = element.getBoundingClientRect().top
+              const offsetPosition = elementPosition + window.pageYOffset - offset
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              })
+            }
           }}
         >
           {item.title}
