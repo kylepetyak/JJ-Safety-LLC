@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Container from '@/components/ui/Container'
@@ -17,6 +18,8 @@ const navigation = [
 ]
 
 export default function Navbar() {
+  const pathname = usePathname()
+  const isHomepage = pathname === '/'
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -29,13 +32,16 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Use transparent navbar only on homepage, otherwise use solid background
+  const useTransparent = isHomepage && !isScrolled
+
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md'
-          : 'bg-transparent'
+        useTransparent
+          ? 'bg-transparent'
+          : 'bg-white/95 backdrop-blur-md shadow-md'
       )}
     >
       <Container>
@@ -44,7 +50,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <div className={cn(
               "text-2xl font-bold transition-colors",
-              isScrolled ? "text-navy-950" : "text-white"
+              useTransparent ? "text-white" : "text-navy-950"
             )}>
               JJ Safety <span className="text-accent-400">LLC</span>
             </div>
@@ -58,9 +64,9 @@ export default function Navbar() {
                 href={item.href}
                 className={cn(
                   "font-medium transition-colors",
-                  isScrolled
-                    ? "text-gray-700 hover:text-navy-950"
-                    : "text-white hover:text-accent-400"
+                  useTransparent
+                    ? "text-white hover:text-accent-400"
+                    : "text-gray-700 hover:text-navy-950"
                 )}
               >
                 {item.name}
@@ -72,7 +78,7 @@ export default function Navbar() {
           <div className="hidden lg:block">
             <Button
               href="/free-assessment"
-              variant={isScrolled ? "primary" : "secondary"}
+              variant={useTransparent ? "secondary" : "primary"}
               size="md"
             >
               Free Assessment
@@ -83,9 +89,9 @@ export default function Navbar() {
           <button
             className={cn(
               "lg:hidden p-2 transition-colors",
-              isScrolled
-                ? "text-gray-700 hover:text-navy-950"
-                : "text-white hover:text-accent-400"
+              useTransparent
+                ? "text-white hover:text-accent-400"
+                : "text-gray-700 hover:text-navy-950"
             )}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -97,7 +103,7 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <div className={cn(
             "lg:hidden py-4 border-t",
-            isScrolled ? "border-gray-200 bg-white" : "border-white/20 bg-navy-900/95 backdrop-blur-md"
+            useTransparent ? "border-white/20 bg-navy-900/95 backdrop-blur-md" : "border-gray-200 bg-white"
           )}>
             <div className="flex flex-col space-y-4">
               {navigation.map((item) => (
@@ -106,9 +112,9 @@ export default function Navbar() {
                   href={item.href}
                   className={cn(
                     "font-medium transition-colors py-2",
-                    isScrolled
-                      ? "text-gray-700 hover:text-navy-950"
-                      : "text-white hover:text-accent-400"
+                    useTransparent
+                      ? "text-white hover:text-accent-400"
+                      : "text-gray-700 hover:text-navy-950"
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -118,7 +124,7 @@ export default function Navbar() {
               <div className="pt-4">
                 <Button
                   href="/free-assessment"
-                  variant={isScrolled ? "primary" : "secondary"}
+                  variant={useTransparent ? "secondary" : "primary"}
                   size="md"
                   className="w-full"
                 >
