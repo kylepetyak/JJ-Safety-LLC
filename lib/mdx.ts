@@ -14,64 +14,55 @@ export interface BlogPost {
   category: string
   platforms: string[]
   featured: boolean
+  draft: boolean
   image?: string
+  youtubeId?: string
   content: string
   readingTime: number
 }
 
+// Drafts are visible locally and on Vercel preview deployments, hidden in production.
+const showDrafts = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV !== 'production'
+  : process.env.NODE_ENV !== 'production'
+
+function parsePost(slug: string, fileContents: string): BlogPost {
+  const { data, content } = matter(fileContents)
+  return {
+    slug,
+    title: data.title || '',
+    description: data.description || '',
+    date: data.date || new Date().toISOString(),
+    author: data.author || 'JJ Safety Team',
+    category: data.category || 'General',
+    platforms: data.platforms || [],
+    featured: data.featured || false,
+    draft: data.draft === true,
+    image: data.image,
+    youtubeId: data.youtubeId,
+    content,
+    readingTime: calculateReadingTime(content),
+  }
+}
+
 export async function getAllPosts(): Promise<BlogPost[]> {
-  // Create directory if it doesn't exist
   if (!fs.existsSync(contentDirectory)) {
     return []
   }
 
-  const files = fs.readdirSync(contentDirectory)
-  const posts = files
+  return fs
+    .readdirSync(contentDirectory)
     .filter(file => file.endsWith('.mdx'))
-    .map(file => {
-      const slug = file.replace('.mdx', '')
-      const fullPath = path.join(contentDirectory, file)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-      const { data, content } = matter(fileContents)
-
-      return {
-        slug,
-        title: data.title || '',
-        description: data.description || '',
-        date: data.date || new Date().toISOString(),
-        author: data.author || 'JJ Safety Team',
-        category: data.category || 'General',
-        platforms: data.platforms || [],
-        featured: data.featured || false,
-        image: data.image,
-        content,
-        readingTime: calculateReadingTime(content),
-      } as BlogPost
-    })
+    .map(file => parsePost(file.replace('.mdx', ''), fs.readFileSync(path.join(contentDirectory, file), 'utf8')))
+    .filter(post => showDrafts || !post.draft)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-  return posts
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const fullPath = path.join(contentDirectory, `${slug}.mdx`)
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data, content } = matter(fileContents)
-
-    return {
-      slug,
-      title: data.title || '',
-      description: data.description || '',
-      date: data.date || new Date().toISOString(),
-      author: data.author || 'JJ Safety Team',
-      category: data.category || 'General',
-      platforms: data.platforms || [],
-      featured: data.featured || false,
-      image: data.image,
-      content,
-      readingTime: calculateReadingTime(content),
-    }
+    const post = parsePost(slug, fs.readFileSync(fullPath, 'utf8'))
+    return post.draft && !showDrafts ? null : post
   } catch {
     return null
   }
