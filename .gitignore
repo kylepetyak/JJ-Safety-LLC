@@ -31,6 +31,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# youtube clip recommender
+/tools/youtube-clips/node_modules
+/tools/youtube-clips/output
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
