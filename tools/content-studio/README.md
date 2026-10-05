@@ -12,8 +12,9 @@ Everything is grounded in the transcript. Numbers the speaker gives that readers
 
 ## Setup
 
+The studio shares the website's dependencies, so a normal install at the repo root is all it needs:
+
 ```bash
-cd tools/content-studio
 npm install
 ```
 
@@ -23,7 +24,7 @@ Requirements on your PATH:
 - **ffmpeg** — renders the clips (`brew install ffmpeg` / `winget install ffmpeg` / `apt install ffmpeg`)
 - **yt-dlp** — downloads the source video for published YouTube videos (`brew install yt-dlp` / `pip install yt-dlp`). Not needed when you pass `--source`.
 
-Create `tools/content-studio/.env`:
+Create `tools/content-studio/.env` (or add these to the repo-root `.env`):
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
@@ -35,36 +36,36 @@ YOUTUBE_API_KEY=AIza...
 
 ## Usage
 
-Everything for the latest 3 channel videos:
+All commands run from the repo root. Everything for the latest 3 channel videos:
 
 ```bash
-npm run run -- --channel @jjsafetyllc1 --max 3
+npm run studio -- run --channel @jjsafetyllc1 --max 3
 ```
 
 One published video:
 
 ```bash
-npm run run -- --video https://www.youtube.com/watch?v=VIDEO_ID
+npm run studio -- run --video https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
 An unpublished recording (export captions as SRT from Riverside, Descript, or YouTube Studio):
 
 ```bash
-npm run run -- --srt ./ep12.srt --source ./ep12.mp4 --title "ISNetworld grading changes"
+npm run studio -- run --srt ./ep12.srt --source ./ep12.mp4 --title "ISNetworld grading changes"
 ```
 
 Only part of the pipeline:
 
 ```bash
-npm run clips -- --video VIDEO_ID          # picks + report, no download or ffmpeg
-npm run render -- --video VIDEO_ID         # picks + rendered mp4s
-npm run repurpose -- --video VIDEO_ID      # blog, LinkedIn, newsletter, YouTube, FAQ only
+npm run studio -- clips --video VIDEO_ID        # picks + report, no download or ffmpeg
+npm run studio -- render --video VIDEO_ID       # picks + rendered mp4s
+npm run studio -- repurpose --video VIDEO_ID    # blog, LinkedIn, newsletter, YouTube, FAQ only
 ```
 
 Put the blog post straight into the site as a draft:
 
 ```bash
-npm run repurpose -- --video VIDEO_ID --publish-blog
+npm run studio -- repurpose --video VIDEO_ID --publish-blog
 ```
 
 ### Options
@@ -88,7 +89,7 @@ npm run repurpose -- --video VIDEO_ID --publish-blog
 ## Output
 
 ```
-output/2026-10-05T18-20/
+tools/content-studio/output/2026-10-05T18-20/
   report.md                        ← start here: top clips, files, per-video detail
   _sources/VIDEO_ID.mp4            ← downloaded source (cached between runs)
   why-your-isn-grade-dropped/

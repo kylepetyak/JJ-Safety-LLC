@@ -32,7 +32,6 @@ yarn-error.log*
 .vercel
 
 # content studio
-/tools/content-studio/node_modules
 /tools/content-studio/output
 /tools/content-studio/.env
 
